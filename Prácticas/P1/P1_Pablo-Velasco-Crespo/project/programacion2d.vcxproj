@@ -27,9 +27,19 @@
     <ClInclude Include="..\openal\AL\efx-creative.h" />
     <ClInclude Include="..\openal\AL\efx-presets.h" />
     <ClInclude Include="..\openal\AL\efx.h" />
+    <ClInclude Include="AudioBuffer.h" />
+    <ClInclude Include="AudioSource.h" />
+    <ClInclude Include="Listener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioBuffer.cpp" />
+    <ClCompile Include="AudioSource.cpp" />
+    <ClCompile Include="Listener.cpp" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\data\file1.wav" />
+    <Media Include="..\data\music.wav" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
