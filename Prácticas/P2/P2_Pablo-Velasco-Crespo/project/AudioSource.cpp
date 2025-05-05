@@ -6,7 +6,7 @@ AudioSource::AudioSource(AudioBuffer* buffer)
 	alSourcei(source, AL_BUFFER, buffer->getAlBuffer());
 	setPitch(1.0f);
 	setGain(1.0f);
-	setLooping(false);
+	setLooping(true);
 	setPosition(0.0f, 0.0f, 0.0f);
 	setVelocity(0.0f, 0.0f, 0.0f);
 }
@@ -80,4 +80,9 @@ bool AudioSource::isPlaying() const
 	ALint state;
 	alGetSourcei(source, AL_SOURCE_STATE, &state);
 	return state == AL_PLAYING;
+}
+
+ALuint AudioSource::getSource() const
+{
+	return source;
 }

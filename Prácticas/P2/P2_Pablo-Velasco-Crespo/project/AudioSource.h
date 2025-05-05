@@ -29,5 +29,7 @@ public:
 	void stop();
 	void pause();
 	bool isPlaying() const;
+
+	ALuint getSource() const;
 };
 

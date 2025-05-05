@@ -16,24 +16,14 @@ float Vec2::getX() const
 	return x;
 }
 
-void Vec2::setX(float _x)
-{
-	x = _x;
-}
-
 float Vec2::getY() const
 {
 	return y;
 }
 
-void Vec2::setY(float _y)
-{
-	y = _y;
-}
-
 Vec2 Vec2::operator+(const Vec2& _other) const
 {
-	return Vec2(x + _other.getX(), y + _other.getY());
+	return Vec2(x + _other.x, y + _other.y);
 }
 
 Vec2 Vec2::operator+(const float _scalar) const
@@ -43,7 +33,7 @@ Vec2 Vec2::operator+(const float _scalar) const
 
 Vec2 Vec2::operator-(const Vec2& _other) const
 {
-	return Vec2(x - _other.getX(), y - _other.getY());
+	return Vec2(x - _other.x, y - _other.y);
 }
 
 Vec2 Vec2::operator-(const float _scalar) const
@@ -53,7 +43,7 @@ Vec2 Vec2::operator-(const float _scalar) const
 
 Vec2 Vec2::operator*(const Vec2& _other) const
 {
-	return Vec2(x * _other.getX(), y * _other.getY());
+	return Vec2(x * _other.x, y * _other.y);
 }
 
 Vec2 Vec2::operator*(const float _scalar) const
@@ -63,17 +53,17 @@ Vec2 Vec2::operator*(const float _scalar) const
 
 float Vec2::dot(const Vec2& _other) const
 {
-	return x * _other.getX() + y * _other.getY();
+	return x * _other.x + y * _other.y;
 }
 
 float Vec2::cross(const Vec2& _other) const
 {
-	return (x * _other.getY() - y * _other.getX());
+	return (x * _other.y - y * _other.x);
 }
 
 Vec2 Vec2::operator/(const Vec2& _other) const
 {
-	return Vec2(x / _other.getX(), y / _other.getY());
+	return Vec2(x / _other.x, y / _other.y);
 }
 
 Vec2 Vec2::operator/(const float _scalar) const
@@ -83,7 +73,7 @@ Vec2 Vec2::operator/(const float _scalar) const
 
 bool Vec2::operator==(const Vec2& _other) const
 {
-	if ((x == _other.getX()) && (y == _other.getY()))
+	if ((x == _other.x) && (y == _other.y))
 	{
 		return true;
 	}
@@ -130,7 +120,7 @@ float Vec2::angle_between_vec(const Vec2& _other) const
 }
 float Vec2::angle_between_points(const Vec2& _other) const
 {
-	return atan2(y - _other.getY(), x - _other.getX()) * 180.f / PI;
+	return atan2(y - _other.y, x - _other.x) * 180.f / PI;
 }
 
 float Vec2::distance(const Vec2& _other) const

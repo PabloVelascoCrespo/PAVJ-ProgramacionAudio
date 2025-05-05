@@ -1,0 +1,15 @@
+﻿  AudioBuffer.cpp
+  AudioSource.cpp
+D:\Master\PAVJ-ProgramacionAudio\Prácticas\P1\P1_Pablo-Velasco-Crespo\project\AudioBuffer.h(2,10): error C1083: Cannot open include file: 'AL/al.h': No such file or directory
+  (compiling source file 'AudioBuffer.cpp')
+  
+D:\Master\PAVJ-ProgramacionAudio\Prácticas\P1\P1_Pablo-Velasco-Crespo\project\AudioSource.cpp(1,10): error C1083: Cannot open include file: 'AudioSource.h': No such file or directory
+  Listener.cpp
+D:\Master\PAVJ-ProgramacionAudio\Prácticas\P1\P1_Pablo-Velasco-Crespo\project\Listener.h(4,10): error C1083: Cannot open include file: 'AL/al.h': No such file or directory
+  (compiling source file 'Listener.cpp')
+  
+  main.cpp
+D:\Master\PAVJ-ProgramacionAudio\Prácticas\P1\P1_Pablo-Velasco-Crespo\project\AudioBuffer.h(2,10): error C1083: Cannot open include file: 'AL/al.h': No such file or directory
+  (compiling source file 'main.cpp')
+  
+  Generating Code...

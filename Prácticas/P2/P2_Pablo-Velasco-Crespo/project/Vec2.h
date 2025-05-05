@@ -10,10 +10,7 @@ public:
 	~Vec2();
 
 	float getX() const;
-	void setX(float _x);
 	float getY() const;
-	void setY(float _y);
-
 	Vec2 operator+(const Vec2& _other) const;
 	Vec2 operator+(const float _scalar) const;
 	Vec2 operator-(const Vec2& _other) const;

@@ -1,63 +1,94 @@
 #include "AudioBuffer.h"
 AudioBuffer* AudioBuffer::load(const char* filename)
 {
-    std::ifstream file(filename, std::ios::binary);
-    if (!file.is_open()) return nullptr;
+  std::ifstream file(filename, std::ios::binary);
+  if (!file.is_open()) return nullptr;
 
-    // Lee la cabecera del fichero WAV
-    char chunkID[4];
-    file.read(chunkID, 4);
-    if (std::string(chunkID, 4) != "RIFF") return nullptr;
+  // Leer cabecera RIFF
+  char riffHeader[12];
+  file.read(riffHeader, 12);
+  if (std::string(riffHeader, 4) != "RIFF" ||
+    std::string(riffHeader + 8, 4) != "WAVE") 
+  {
+    return nullptr;
+  }
 
-    file.seekg(22);
-    uint16_t channels;
-    file.read(reinterpret_cast<char*>(&channels), 2);
+  // Buscar los chunks fmt y data
+  uint16_t channels = 0;
+  uint32_t sampleRate = 0;
+  uint16_t bitsPerSample = 0;
+  uint32_t dataSize = 0;
+  std::vector<char> audioData;
 
-    uint32_t sampleRate;
-    file.read(reinterpret_cast<char*>(&sampleRate), 4);
+  char chunkHeader[8];
+  while (file.read(chunkHeader, 8))
+  {
+    std::string chunkId(chunkHeader, 4);
+    uint32_t chunkSize;
+    memcpy(&chunkSize, chunkHeader + 4, 4);
 
-    file.seekg(36);
-    uint16_t bitsPerSample;
-    file.read(reinterpret_cast<char*>(&bitsPerSample), 2);
-
-    // Encuentra el bloque "data"
-    char dataHeader[4];
-    uint32_t dataSize;
-    do 
+    if (chunkId == "fmt ") 
     {
-        file.read(dataHeader, 4);
-        file.read(reinterpret_cast<char*>(&dataSize), 4);
-        if (std::string(dataHeader, 4) != "data")
-            file.seekg(dataSize, std::ios::cur);
-    } while (std::string(dataHeader, 4) != "data" && file);
+      uint16_t formatType;
+      file.read(reinterpret_cast<char*>(&formatType), 2);
+      if (formatType != 1) return nullptr;
 
-   if (!file) return nullptr;
+      file.read(reinterpret_cast<char*>(&channels), 2);
+      file.read(reinterpret_cast<char*>(&sampleRate), 4);
+      file.ignore(6);
+      file.read(reinterpret_cast<char*>(&bitsPerSample), 2);
 
-    // Lee los datos de audio
-    std::vector<char> data(dataSize);
-    file.read(data.data(), dataSize);
+      if (chunkSize > 16)
+      {
+        file.ignore(chunkSize - 16);
+      }
+    }
+    else if (chunkId == "data") 
+    {
+      dataSize = chunkSize;
+      audioData.resize(dataSize);
+      file.read(audioData.data(), dataSize);
+      break;
+    }
+    else
+    {
+      file.ignore(chunkSize);
+    }
+  }
 
-    // Genera el buffer
-    ALuint alBuffer;
-    alGenBuffers(1, &alBuffer);
+  if (audioData.empty()) return nullptr;
 
-    ALenum format = (channels == 1)
-        ? (bitsPerSample == 8 ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16)
-        : (bitsPerSample == 8 ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16);
+  ALuint alBuffer;
+  alGenBuffers(1, &alBuffer);
 
-    alBufferData(alBuffer, format, data.data(), dataSize, sampleRate);
+  ALenum format;
+  if (channels == 1)
+  {
+    format = (bitsPerSample == 8) ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
+  }
+  else if (channels == 2)
+  {
+    format = (bitsPerSample == 8) ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
+  }
+  else 
+  {
+    alDeleteBuffers(1, &alBuffer);
+    return nullptr;
+  }
 
-    AudioBuffer* audioBuffer = new AudioBuffer();
-    audioBuffer->buffer = alBuffer;
-    return audioBuffer;
+  alBufferData(alBuffer, format, audioData.data(), dataSize, sampleRate);
+
+  AudioBuffer* audioBuffer = new AudioBuffer();
+  audioBuffer->buffer = alBuffer;
+  return audioBuffer;
 }
 
 ALuint AudioBuffer::getAlBuffer() const
 {
-    return buffer;
+  return buffer;
 }
 
 AudioBuffer::~AudioBuffer()
 {
-    alDeleteBuffers(1, &buffer);
+  alDeleteBuffers(1, &buffer);
 }
